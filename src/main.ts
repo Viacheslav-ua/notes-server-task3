@@ -1,13 +1,28 @@
 import { NestFactory } from "@nestjs/core"
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import { AppModule } from "./app.module"
 
 
-async function start() {
-  const PORT = process.env.PORT || 3001
-  const app = await NestFactory.create(AppModule)
+const start = async () => {
+  try {
+    const PORT = process.env.PORT ?? 3001
+    const app = await NestFactory.create(AppModule, { cors: true })
 
+    const config = new DocumentBuilder()
+      .setTitle('REST API server (notes-server-task3)')
+      .setDescription('Documentation')
+      .setVersion('1.0.0')
+      .build()
+    const document = SwaggerModule.createDocument(app, config)
+    SwaggerModule.setup('/docs', app, document)
 
-  await app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+  await app.listen(PORT, () =>
+      console.log(`Server running. Use our API on port: ${PORT}`),
+    );
+  } catch (e) {
+    console.log(`Server not running. Error: ${e.message}`)
+  }
 }
 
 start()
+
