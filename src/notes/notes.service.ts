@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { CreateNoteDto } from './dto/create-note.dto'
-import { GetAllQueryDto } from './dto/getoll-note.dto'
-import { UpdateNoteDto } from './dto/update-note.dto'
+import { GetNotesDto } from './dto/getoll-note.dto'
 import { Note } from './notes.model'
 
 @Injectable()
@@ -15,7 +14,7 @@ export class NotesService {
     return note
   }
 
-  async getNotes(dto: GetAllQueryDto = null): Promise<Note[]> {
+  async getNotes(dto: GetNotesDto): Promise<Note[]> {
     const notes = await this.noteRepository.findAll({ where: this.setParams(dto), include: {all: true}})
     return notes
   }
@@ -35,17 +34,17 @@ export class NotesService {
     return removeCount
   }
 
-  async editNote(idNote: number, dto: UpdateNoteDto) {
+  async editNote(idNote: number, dto: CreateNoteDto) {
     const updatedCount = await this.noteRepository.update({ ...dto }, { where: { id: idNote } })
     return updatedCount
   }
 
-  setParams(dto: GetAllQueryDto) {
-    const { active, archive } = dto
-    if (active  !== undefined) {
+  private setParams(dto: GetNotesDto) {
+    const { query } = dto
+    if (query === 'active') {
       return { isArchive: false };
     }
-    if (archive  !== undefined) {
+    if (query === 'archive') {
       return { isArchive: true }
     }
     return
