@@ -15,6 +15,7 @@ import { StatisticModule } from './statistic/statistic.module'
       envFilePath: `.${process.env.NODE_ENV}.env`
     }),
     SequelizeModule.forRoot({
+      ssl: true,
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
       port: Number(process.env.POSTGRES_PORT),
