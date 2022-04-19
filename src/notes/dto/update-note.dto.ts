@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 
-export class CreateNoteDto {
+export class UpdateNoteDto {
   @ApiProperty({required: false})
   readonly categoryId: number;
 
@@ -8,5 +8,11 @@ export class CreateNoteDto {
   readonly name: string;
 
   @ApiProperty({required: false})
-  readonly content: string; 
+  readonly content: string;
+  
+  @ApiProperty({required: false})
+  readonly dates: string;
+
+  @ApiProperty({required: false})
+  readonly isArchive: boolean;
 }

@@ -1,5 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { ApiProperty } from "@nestjs/swagger"
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript"
+import { Category } from "src/category/category.model"
 
 interface NoteCreationAttrs {
   categoryId: number;
@@ -11,13 +12,20 @@ interface NoteCreationAttrs {
 
 @Table({ tableName: 'notes' })
 export class Note extends Model<Note, NoteCreationAttrs> {
+  
   @ApiProperty({example: 1, description: 'Unique id'})
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number;
   
-  @ApiProperty({example: 1, description: 'Category id'})
+  
+  @ApiProperty({ example: 1, description: 'Category id' })
+  @ForeignKey(() => Category)
   @Column({type: DataType.INTEGER})
-  categoryId: number;
+  categoryId?: number;
+    
+  @BelongsTo(() => Category)
+  category: Category
+
 
   @ApiProperty({example: 'Shopping', description: 'Note name'})
   @Column({type: DataType.STRING})
